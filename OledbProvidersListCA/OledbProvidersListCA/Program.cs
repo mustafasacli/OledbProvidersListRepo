@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
+using System.Linq;
 
 namespace OledbProvidersListCA
 {
@@ -9,15 +10,20 @@ namespace OledbProvidersListCA
     {
         static void Main(string[] args)
         {
-            
+
             using (DataTable providers = DbProviderFactories.GetFactoryClasses())
             {
                 Console.WriteLine("Available ADO.NET Data Providers:");
+                var columns = providers.Columns;
                 foreach (DataRow prov in providers.Rows)
                 {
-                    Console.WriteLine("Name:{0}", prov["Name"]);
-                    Console.WriteLine("Description:{0}", prov["Description"]);
-                    Console.WriteLine("Invariant Name:{0}", prov["InvariantName"]);
+                    foreach (DataColumn column in columns)
+                    {
+                        Console.WriteLine("{0} : {1}", column.ColumnName, prov[column]);
+                    }
+                    //Console.WriteLine("Name:{0}", prov["Name"]);
+                    //Console.WriteLine("Description:{0}", prov["Description"]);
+                    //Console.WriteLine("Invariant Name:{0}", prov["InvariantName"]);
                     Console.WriteLine("------------------------------------------------------------");
                 }
             }
